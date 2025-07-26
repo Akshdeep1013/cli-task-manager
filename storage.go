@@ -6,7 +6,19 @@ import (
 	"os"
 )
 
-func LoadTasks() (Tasks, error) {
+type TaskStorage interface {
+	Load() (Tasks, error)
+	Save(Tasks) error
+}
+
+type FileStorage struct {
+}
+
+type MockStorage struct {
+	FakeData Tasks
+}
+
+func (f *FileStorage) Load() (Tasks, error) {
 	filePath := "/home/deep/personal-projects/cli-task-manager/tasks.json"
 	data, err := os.ReadFile(filePath)
 	if err != nil {
@@ -24,7 +36,7 @@ func LoadTasks() (Tasks, error) {
 	return tasks, nil
 }
 
-func SaveTasks(updatedTasks Tasks) error {
+func (f *FileStorage) Save(updatedTasks Tasks) error {
 	jsonBytes, err := json.Marshal(updatedTasks)
 	if err != nil {
 		fmt.Println("Error while parsing data: ", err)
@@ -37,5 +49,14 @@ func SaveTasks(updatedTasks Tasks) error {
 		fmt.Println("Error while writting into the file: ", err)
 		return err
 	}
+	return nil
+}
+
+func (m *MockStorage) Load() (Tasks, error) {
+	return m.FakeData, nil
+}
+
+func (m *MockStorage) Save(updatedTasks Tasks) error {
+	m.FakeData = updatedTasks
 	return nil
 }

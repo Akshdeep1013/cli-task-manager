@@ -18,7 +18,8 @@ func main() {
 
 	if *add != "" {
 		//add a task
-		err := AddTask(*add, *desc)
+		realStorage := FileStorage{}
+		err := AddTask(*add, *desc, &realStorage)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -26,7 +27,8 @@ func main() {
 	}
 
 	if *list {
-		tasks, err := ListTasks()
+		realStorage := FileStorage{}
+		tasks, err := ListTasks(&realStorage)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -45,7 +47,8 @@ func main() {
 	}
 
 	if *delete > 0 {
-		err := DeleteTask(*delete)
+		realStorage := FileStorage{}
+		err := DeleteTask(*delete, &realStorage)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -53,7 +56,8 @@ func main() {
 		fmt.Printf("Your task id:%d has been deleted\n", *delete)
 	}
 	if *complete > 0 {
-		err := MarkComplete(*complete)
+		realStorage := FileStorage{}
+		err := MarkComplete(*complete, &realStorage)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -62,7 +66,7 @@ func main() {
 	}
 
 	if *add == "" && *list == false && *delete < 1 && *complete < 1 {
-		fmt.Println("\nPlease use -help for available commands\n")
+		fmt.Println("\nPlease use -help for available commands")
 	}
 
 }

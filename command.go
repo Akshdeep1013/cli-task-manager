@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-func AddTask(taskName, taskDescription string) error {
+func AddTask(taskName, taskDescription string, storage TaskStorage) error {
 	//load json file
-	tasks, err := LoadTasks()
+	tasks, err := storage.Load()
 	if err != nil {
 		return err
 	}
@@ -29,15 +29,15 @@ func AddTask(taskName, taskDescription string) error {
 	}
 
 	//save tasks
-	return SaveTasks(updatedTasks)
+	return storage.Save(updatedTasks)
 }
 
-func ListTasks() (Tasks, error) {
-	return LoadTasks()
+func ListTasks(storage TaskStorage) (Tasks, error) {
+	return storage.Load()
 }
 
-func DeleteTask(TaskId int) error {
-	tasks, err := LoadTasks()
+func DeleteTask(TaskId int, storage TaskStorage) error {
+	tasks, err := storage.Load()
 	if err != nil {
 		return err
 	}
@@ -54,11 +54,11 @@ func DeleteTask(TaskId int) error {
 	}
 
 	//save updated tasks
-	return SaveTasks(tasks)
+	return storage.Save(tasks)
 }
 
-func MarkComplete(TaskId int) error {
-	tasks, err := LoadTasks()
+func MarkComplete(TaskId int, storage TaskStorage) error {
+	tasks, err := storage.Load()
 	if err != nil {
 		return err
 	}
@@ -78,5 +78,5 @@ func MarkComplete(TaskId int) error {
 	}
 
 	//save updated tasks
-	return SaveTasks(tasks)
+	return storage.Save(tasks)
 }
